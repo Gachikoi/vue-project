@@ -1,13 +1,20 @@
-import { createRouter,createWebHistory } from "vue-router";
-import Son from '@/components/Son.vue'
+import { createRouter, createWebHistory } from "vue-router";
 
 export default createRouter({
-    history:createWebHistory(),
+    history: createWebHistory(),
 
-    routes:[
+    routes: [
         {
-            path:'/a',
-            component:Son
+            path: '/home',
+            component: () => import("@/pages/Home.vue")
+        },
+        {
+            path: 'Hosptial',
+            component: () => import("@/pages/Hosptial.vue")
+        },
+        {
+            path:'/',
+            redirect:'/home'
         }
     ]
 })

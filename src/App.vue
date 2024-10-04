@@ -1,22 +1,27 @@
-<script setup lang="ts" name="App">
-import {ref} from 'vue'
-import { RouterView ,RouterLink} from 'vue-router';
-
-const myText=ref('')
-
-
-</script>
-
 <template>
-<RouterLink :to="{path:'/a'}" active-class="test">111</RouterLink>
-  <RouterView>
-  </RouterView>
+<div class="container">
+    <HospitalTop></HospitalTop>
+    <div class="content"></div>
+    <HospitalBottom></HospitalBottom>
+</div>
 </template>
 
-<style>
-.test{
-  width: 100px;
-  height: 100px;
-  background-color: pink;
+<script lang="ts" setup name="App">
+import HospitalBottom from './components/HospitalBottom.vue';
+import HospitalTop from './components/HospitalTop.vue';
+</script>
+
+<style lang="scss" scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .content {
+        width: 1200px;
+        height: 2000px;
+        background-color: pink;
+        margin-top: 70px;
+    }
 }
 </style>
