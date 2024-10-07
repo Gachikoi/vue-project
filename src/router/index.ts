@@ -9,12 +9,19 @@ export default createRouter({
             component: () => import("@/pages/Home.vue")
         },
         {
-            path: 'Hosptial',
+            path: '/hosptial',
             component: () => import("@/pages/Hosptial.vue")
         },
         {
             path:'/',
             redirect:'/home'
         }
-    ]
+    ],
+
+    scrollBehavior(){
+        return {
+            left:0,
+            right:0
+        }
+    }
 })

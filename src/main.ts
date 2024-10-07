@@ -1,16 +1,21 @@
 import { createApp } from 'vue'
-import App from './App.vue'
 import {createPinia}  from "pinia";
+
+import App from './App.vue'
 import HospitalTop from './components/HospitalTop.vue';
 import HospitalBottom from './components/HospitalBottom.vue';
-import '@/style/reset.scss'
-// import router from './router'
 
+import router from './router'
+
+import '@/style/reset.scss'
+
+const pinia=createPinia()
 const app=createApp(App)
+
 app.component('HospitalTop',HospitalTop)
 app.component('HospitalBottom',HospitalBottom)
-const pinia=createPinia()
 
-// app.use(router)
+app.use(router)
 app.use(pinia)
+
 app.mount('#app')

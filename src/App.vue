@@ -1,27 +1,31 @@
 <template>
-<div class="container">
+  <div class="container">
     <HospitalTop></HospitalTop>
-    <div class="content"></div>
+    <div class="content">
+      <RouterView to="/home"></RouterView>
+    </div>
     <HospitalBottom></HospitalBottom>
-</div>
+  </div>
 </template>
 
 <script lang="ts" setup name="App">
-import HospitalBottom from './components/HospitalBottom.vue';
-import HospitalTop from './components/HospitalTop.vue';
+import { useRoute } from 'vue-router';
+
+const router = useRoute()
 </script>
 
 <style lang="scss" scoped>
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .content {
-        width: 1200px;
-        height: 2000px;
-        background-color: pink;
-        margin-top: 70px;
-    }
+  .content {
+    display: flex;
+    width: 1200px;
+    height: 2000px;
+    background-color: pink;
+    margin-top: 70px;
+  }
 }
 </style>
