@@ -1,8 +1,8 @@
 <template>
   <div class="silder-container" @mouseover="stopAutoplay" @mouseleave="autoplay" @touchstart="stopAutoplay"
-    @touchend="autoplay">
+    @touchend="autoplay" @touchcancel="autoplay">
     <div class="arrow">
-      <div class="left" @mousedown="throttle(leftActive, 1000, true)()" @mouseup="throttle(leftDisacitive, 1000, true)()"
+      <div class="left" @mousedown="leftActive" @mouseup="leftDisacitive"
         @touchstart="leftActive" @touchend="leftDisacitive" @touchcancel="isLeftAcitive = false"
         :class="{ active: isLeftAcitive }"></div>
       <div class="right" @mousedown="rightActive" @mouseup="rightDisacitive" @touchstart="rightActive"
@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { onMounted } from 'vue';
-import { debounce, throttle } from '@/composables/useExtensions'
+import { throttle } from '@/composables/useExtensions';
 
 const images = ref([
   {
@@ -56,7 +56,11 @@ const isLeftAcitive = ref(false)
 const isRightAcitive = ref(false)
 const index = ref(0)
 let domImages: HTMLElement
-let timer: number | null
+let timerAutoplay: number | null
+//由于我们要在按下左箭头时，右箭头也一起节流，所以我们无法使用封装好的throttle函数。
+//如果需要使用，请先将throttle()赋值给一个常量，在@事件被触发时调用这个常量，否则节流/防抖将不生效。
+let timerActive:number | null
+let timerDisactive: number | null
 
 onMounted(() => {
   domImages = document.querySelector('.images') as HTMLElement
@@ -64,52 +68,72 @@ onMounted(() => {
 })
 
 function leftActive() {
-  console.log(1)
-  isLeftAcitive.value = true
-}
-function rightActive() {
-  isRightAcitive.value = true
-}
-function leftDisacitive() {
-  //改变左箭头颜色
-  isLeftAcitive.value = false
-  //改变图片
-  index.value--
-  domImages.style.transition = 'all 1s ease-in-out'
-  domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
-  //判断如果到了最前一张
-  if (index.value == -1) {
-    //初始化index=images.value.length-1
-    index.value = images.value.length - 1
-    //设置定时器把第一张变为最后一张
-    setTimeout(() => {
-      domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
-      domImages.style.transition = 'none'
-    }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等
+  if (!timerActive) {
+    isLeftAcitive.value = true
+    timerActive = setTimeout(() => {
+      timerActive = null
+    }, 1000)
   }
 }
+function rightActive() {
+  if (!timerActive) {
+    isRightAcitive.value = true
+    timerActive = setTimeout(() => {
+      timerActive = null
+    }, 1000)
+  }
+}
+function leftDisacitive() {
+  if (!timerDisactive) {
+    //改变左箭头颜色
+    isLeftAcitive.value = false
+    //改变图片
+    index.value--
+    domImages.style.transition = 'all 1s ease-in-out'
+    domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+    //判断如果到了最前一张
+    if (index.value == -1) {
+      //初始化index=images.value.length-1
+      index.value = images.value.length - 1
+      //设置定时器把第一张变为最后一张
+      setTimeout(() => {
+        domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+        domImages.style.transition = 'none'
+      }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等
+    }
+    timerDisactive = setTimeout(() => {
+      timerDisactive = null
+    }, 1000)
+  }
+}
+
 function rightDisacitive() {
-  //改变右箭头颜色
-  isRightAcitive.value = false
-  //改变图片
-  index.value++
-  domImages.style.transition = 'all 1s ease-in-out'
-  domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
-  //判断如果到了最后一张
-  if (index.value == images.value.length) {
-    //初始化index=0
-    index.value = 0
-    //设置定时器把最后一张变为第一张
-    setTimeout(() => {
-      domImages.style.transform = `translate3d(-1200px,0,0)`
-      domImages.style.transition = 'none'
-    }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等（需要节流。因为如果两次点击在1000内，则会在被定时器内的回调函数的动画强制拽回index=0时的视图）
+  if (!timerDisactive) {
+    //改变右箭头颜色
+    isRightAcitive.value = false
+    //改变图片
+    index.value++
+    domImages.style.transition = 'all 1s ease-in-out'
+    domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+    //判断如果到了最后一张
+    if (index.value == images.value.length) {
+      //初始化index=0
+      index.value = 0
+      //设置定时器把最后一张变为第一张
+      setTimeout(() => {
+        domImages.style.transform = `translate3d(-1200px,0,0)`
+        domImages.style.transition = 'none'
+      }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等（需要节流。因为如果两次点击在1000内，则会在被定时器内的回调函数的动画强制拽回index=0时的视图）
+    }
+    timerDisactive = setTimeout(() => {
+      timerDisactive=null
+    },1000)
   }
 }
 
 function autoplay() {
-  if (!timer) {
-    timer = setInterval(() => {
+  if (!timerAutoplay) {
+    timerAutoplay = setInterval(() => {
       index.value++
       domImages.style.transition = 'all 1s ease-in-out'
       domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
@@ -128,8 +152,8 @@ function autoplay() {
 }
 
 function stopAutoplay() {
-  if (timer) clearInterval(timer)
-  timer = null
+  if (timerAutoplay) clearInterval(timerAutoplay)
+  timerAutoplay = null
 }
 </script>
 
@@ -184,6 +208,7 @@ function stopAutoplay() {
     .active {
       border-top: 5px solid white;
       border-right: 5px solid white;
+      scale: 0.9;
     }
   }
 

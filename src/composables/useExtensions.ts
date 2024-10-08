@@ -1,8 +1,6 @@
-import { watch } from "vue"
-
-export function debounce(func:Function,wait:number,immediate:boolean,...args:Array<any>){
-    let timer:number
-    return function(){
+export function debounce(func:Function,wait:number,immediate:boolean=false,...args:Array<any>){
+    let timer:number | null
+    return function(this:any){
       if (timer) clearTimeout(timer)
       if (immediate) {
         func(...args)
@@ -10,29 +8,31 @@ export function debounce(func:Function,wait:number,immediate:boolean,...args:Arr
         },wait)
       } else {
         timer = setTimeout(() => {
-          func(...args)
+          func.apply(this,...args)
         }, wait)
       }
     }
   }
 
-export function throttle(func:Function,wait:number,immediate:boolean,...args:Array<any>){
-    let timer:number | null
-    return function(){
-      if (immediate) {
-        if (!timer) {
-          func(...args)
-          timer = setTimeout(() => {
-            timer = null
-          }, wait)
-        }
-      } else {
-        if (!timer) {
-          timer = setTimeout(() => {
-            func(...args)
-            timer = null
-          }, wait)
-        }
+export function throttle(func:Function,wait:number,immediate:boolean=false,...args:Array<any>){
+  let timer: number | null = null
+  return function(this:any){
+    if (immediate) {
+      if (!timer) {
+        func(...args)
+        timer = setTimeout(() => {
+          timer = null
+        }, wait)
+        console.log(timer)
+      }
+    } else {
+      if (!timer) {
+        timer = setTimeout(() => {
+          func.apply(this,...args)
+          timer = null
+        }, wait)
       }
     }
   }
+}  
+  
