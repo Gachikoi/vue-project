@@ -2,14 +2,17 @@
   <div class="silder-container" @mouseover="stopAutoplay" @mouseleave="autoplay" @touchstart="stopAutoplay"
     @touchend="autoplay">
     <div class="arrow">
-      <div class="left" @mousedown="isLeftAcitive = true" @mouseup="leftDisacitive" @touchstart="isLeftAcitive = true"
-        @touchcancel="leftDisacitive" :class="{ active: isLeftAcitive }"></div>
-      <div class="right" @mousedown="isRightAcitive = true" @mouseup="rightDisacitive"
-        @touchstart="isRightAcitive = true" @touchcancel="rightDisacitive" :class="{ active: isRightAcitive }"></div>
+      <div class="left" @mousedown="throttle(leftActive, 1000, true)()" @mouseup="throttle(leftDisacitive, 1000, true)()"
+        @touchstart="leftActive" @touchend="leftDisacitive" @touchcancel="isLeftAcitive = false"
+        :class="{ active: isLeftAcitive }"></div>
+      <div class="right" @mousedown="rightActive" @mouseup="rightDisacitive" @touchstart="rightActive"
+        @touchend="rightDisacitive" @touchcancel="isRightAcitive = false" :class="{ active: isRightAcitive }"></div>
     </div>
-    <div class="images">
-      <img v-for="{ id, src, alt } in images" :key="id" :src="src.href" :alt="alt">
-    </div>
+    <ul class="images">
+      <li><img :src="images[images.length - 1].src.href" :alt="images[images.length - 1].alt"></li>
+      <li v-for="{ id, src, alt } in images" :key="id"><img :src="src.href" :alt="alt"></li>
+      <li><img :src="images[0].src.href" :alt="images[0].alt"></li>
+    </ul>
     <ul class="bar">
       <li v-for="{ id } in images" :key="id" :class="{ active: id == index }"></li>
     </ul>
@@ -17,77 +20,117 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch } from 'vue'
+import { ref } from 'vue'
 import { onMounted } from 'vue';
+import { debounce, throttle } from '@/composables/useExtensions'
 
 const images = ref([
   {
     id: 0,
-    src: new URL("../assets/images/web-banner-1.png", import.meta.url),
-    alt: "web-banner"
+    src: new URL("../assets/images/1.png", import.meta.url),
+    alt: "陈晓月"
   },
   {
     id: 1,
-    src: new URL("../assets/images/404_cloud.png", import.meta.url),
-    alt: "web-banner2"
+    src: new URL("../assets/images/2.png", import.meta.url),
+    alt: "集章册正面"
   },
   {
     id: 2,
-    src: new URL("../assets/images/web-banner-1.png", import.meta.url),
-    alt: "web-banner3"
+    src: new URL("../assets/images/3.png", import.meta.url),
+    alt: "若似霜"
   },
   {
     id: 3,
-    src: new URL("../assets/images/web-banner-1.png", import.meta.url),
-    alt: "web-banner4"
+    src: new URL("../assets/images/4.png", import.meta.url),
+    alt: "集章册反面"
   },
+  {
+    id: 4,
+    src: new URL("../assets/images/5.png", import.meta.url),
+    alt: "表表表面"
+  }
 ])
 
 const isLeftAcitive = ref(false)
 const isRightAcitive = ref(false)
 const index = ref(0)
 let domImages: HTMLElement
-let timer: number
+let timer: number | null
 
 onMounted(() => {
   domImages = document.querySelector('.images') as HTMLElement
   autoplay()
 })
 
+function leftActive() {
+  console.log(1)
+  isLeftAcitive.value = true
+}
+function rightActive() {
+  isRightAcitive.value = true
+}
 function leftDisacitive() {
+  //改变左箭头颜色
   isLeftAcitive.value = false
-  if (index.value == 0) {
-    index.value = images.value.length - 1;
-  } else {
-    index.value--;
+  //改变图片
+  index.value--
+  domImages.style.transition = 'all 1s ease-in-out'
+  domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+  //判断如果到了最前一张
+  if (index.value == -1) {
+    //初始化index=images.value.length-1
+    index.value = images.value.length - 1
+    //设置定时器把第一张变为最后一张
+    setTimeout(() => {
+      domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+      domImages.style.transition = 'none'
+    }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等
   }
 }
-
 function rightDisacitive() {
+  //改变右箭头颜色
   isRightAcitive.value = false
-  if (index.value == images.value.length - 1) {
-    index.value = 0;
-  } else {
-    index.value++;
+  //改变图片
+  index.value++
+  domImages.style.transition = 'all 1s ease-in-out'
+  domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+  //判断如果到了最后一张
+  if (index.value == images.value.length) {
+    //初始化index=0
+    index.value = 0
+    //设置定时器把最后一张变为第一张
+    setTimeout(() => {
+      domImages.style.transform = `translate3d(-1200px,0,0)`
+      domImages.style.transition = 'none'
+    }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等（需要节流。因为如果两次点击在1000内，则会在被定时器内的回调函数的动画强制拽回index=0时的视图）
   }
 }
 
 function autoplay() {
-  timer = setInterval(() => {
-    index.value++;
-    if (index.value == images.value.length) {
-      index.value = 0
-    }
-  }, 3000)
+  if (!timer) {
+    timer = setInterval(() => {
+      index.value++
+      domImages.style.transition = 'all 1s ease-in-out'
+      domImages.style.transform = `translate3d(-${(index.value + 1) * 1200}px,0,0)`
+      //判断如果到了最后一张
+      if (index.value == images.value.length) {
+        //初始化index=0
+        index.value = 0
+        //设置定时器把最后一张变为第一张
+        setTimeout(() => {
+          domImages.style.transform = `translate3d(-1200px,0,0)`
+          domImages.style.transition = 'none'
+        }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等（需要节流。因为如果两次点击在1000内，则会在被定时器内的回调函数的动画强制拽回index=0时的视图）
+      }
+    }, 3000)
+  }
 }
 
 function stopAutoplay() {
-  clearInterval(timer)
+  if (timer) clearInterval(timer)
+  timer = null
 }
-
-watch(index, () => {
-  domImages.style.transform = `translateX(-${index.value * 1200}px)`
-})
 </script>
 
 <style lang="scss" scoped>
@@ -98,7 +141,8 @@ watch(index, () => {
   overflow: hidden;
   width: 1200px;
   height: 350px;
-  border-radius: 10px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 2px 2px rgba($color: #b2b2b247, $alpha: 0.3);
 
   .arrow {
     .left {
@@ -113,6 +157,10 @@ watch(index, () => {
       border-right: 5px solid gainsboro;
       border-radius: 5px;
       transition: all 0.1s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .right {
@@ -127,6 +175,10 @@ watch(index, () => {
       border-right: 5px solid gainsboro;
       border-radius: 5px;
       transition: all 0.1s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .active {
@@ -137,12 +189,20 @@ watch(index, () => {
 
   .images {
     display: flex;
+    transform: translate3d(-1200px, 0, 0);
     transition: all 1s ease-in-out;
 
-    img {
+    li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 1200px;
       min-width: 1200px;
       height: 350px;
+
+      img {
+        height: 100%;
+      }
     }
   }
 
@@ -161,6 +221,7 @@ watch(index, () => {
       border-radius: 10px;
       margin-right: 5px;
       transition: all 0.5s ease-in-out;
+      box-shadow: 0px 0px 2px 2px rgba($color: #b2b2b247, $alpha: 0.3);
     }
 
     .active {

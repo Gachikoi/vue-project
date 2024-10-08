@@ -3,7 +3,7 @@
     <div class="content">
       <div class="left">
         <img src="../assets/images/logo.png" alt="logo">
-        <p>尚医通 预约挂号统一平台</p>
+        <p></p>
       </div>
       <div class="right">
         <p class="help">帮助中心</p>
