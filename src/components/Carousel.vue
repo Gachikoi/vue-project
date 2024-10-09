@@ -1,12 +1,28 @@
 <template>
-  <div class="silder-container" @mouseover="stopAutoplay" @mouseleave="autoplay" @touchstart="stopAutoplay"
-    @touchend="autoplay" @touchcancel="autoplay">
+  <div 
+    class="silder-container" 
+    @mouseover="stopAutoplay"
+    @mouseleave="autoplay" 
+    @touchstart="stopAutoplay"
+    @touchend="autoplay" 
+    @touchcancel="autoplay">
     <div class="arrow">
-      <div class="left" @mousedown="leftActive" @mouseup="leftDisacitive"
-        @touchstart="leftActive" @touchend="leftDisacitive" @touchcancel="isLeftAcitive = false"
-        :class="{ active: isLeftAcitive }"></div>
-      <div class="right" @mousedown="rightActive" @mouseup="rightDisacitive" @touchstart="rightActive"
-        @touchend="rightDisacitive" @touchcancel="isRightAcitive = false" :class="{ active: isRightAcitive }"></div>
+      <div class="left" 
+        @mousedown="leftActive" 
+        @mouseup="leftDisacitive"
+        @touchstart="leftActive" 
+        @touchend="leftDisacitive" 
+        @touchcancel="isLeftAcitive = false"
+        :class="{ active: isLeftAcitive }">
+      </div>
+      <div class="right" 
+        @mousedown="rightActive" 
+        @mouseup="rightDisacitive" 
+        @touchstart="rightActive"
+        @touchend="rightDisacitive" 
+        @touchcancel="isRightAcitive = false" 
+        :class="{ active: isRightAcitive }">
+      </div>
     </div>
     <ul class="images">
       <li><img :src="images[images.length - 1].src.href" :alt="images[images.length - 1].alt"></li>
@@ -166,6 +182,7 @@ function stopAutoplay() {
   width: 1200px;
   height: 350px;
   border-radius: 20px;
+  background: gainsboro;
   box-shadow: 0px 0px 2px 2px rgba($color: #b2b2b247, $alpha: 0.3);
 
   .arrow {

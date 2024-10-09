@@ -24,7 +24,6 @@ const router = useRoute()
     display: flex;
     width: 1200px;
     height: 2000px;
-    background-color: pink;
     margin-top: 70px;
   }
 }

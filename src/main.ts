@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from "pinia"
 import ElementPlus from "element-plus"
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import router from './router'
 
 
@@ -19,6 +20,8 @@ app.component('HospitalBottom',HospitalBottom)
 
 app.use(router)
 app.use(pinia)
-app.use(ElementPlus)
+app.use(ElementPlus, {
+  locale:zhCn
+})
 
 app.mount('#app')

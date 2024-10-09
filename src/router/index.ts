@@ -10,7 +10,7 @@ export default createRouter({
         },
         {
             path: '/hosptial',
-            component: () => import("@/pages/Hosptial.vue")
+            component: () => import("@/pages/Hospital.vue")
         },
         {
             path:'/',
