@@ -4,6 +4,7 @@
     <div class="content">
       <RouterView to="/home"></RouterView>
     </div>
+
     <HospitalBottom></HospitalBottom>
   </div>
 </template>
@@ -24,7 +25,7 @@ const router = useRoute()
     display: flex;
     width: 1200px;
     height: 2000px;
-    background-color: pink;
+
     margin-top: 70px;
   }
 }
