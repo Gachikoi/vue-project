@@ -3,7 +3,7 @@ import { extend } from "dayjs";
 
 enum API {
   HOSPITAL_DETAIL_URL = '/hosp/hospital/',
-  HOSPITAL_DEPARTMENT_URL = ' /hosp/hospital/department/'
+  HOSPITAL_DEPARTMENT_URL = '/hosp/hospital/department/'
 }
 
 export const reqHospitalDetail = (hoscode: string) => request.get<any, HospitalDetailResponseData>(API.HOSPITAL_DETAIL_URL + hoscode)

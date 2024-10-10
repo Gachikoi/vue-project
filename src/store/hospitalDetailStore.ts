@@ -21,7 +21,7 @@ export const useHospitalDetailStore = defineStore('HospitalDetail', () => {
     }
   }
 
-  return { hospitalInfo, getHospitalDetail,getHospitalDepartment }
+  return { hospitalInfo, hospitalDepartment,getHospitalDetail,getHospitalDepartment }
 })
 
 

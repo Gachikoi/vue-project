@@ -18,12 +18,16 @@
         <div class="rule-info" v-for="(item,index) in hospitalDetailStore.hospitalInfo.bookingRule?.rule" :key="index">{{ item }}</div>
       </div>
     </div>
+    <div class="department" v-if="hospitalDetailStore.hospitalDepartment.length != 0">
+      {{ hospitalDetailStore.hospitalDepartment[0] }}
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useHospitalDetailStore } from '@/store/hospitalDetailStore';
 const hospitalDetailStore = useHospitalDetailStore()
+
 </script>
 
 <style lang="scss" scoped>
