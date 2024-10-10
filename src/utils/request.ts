@@ -11,7 +11,6 @@ request.interceptors.request.use((config) => {
 })
 
 request.interceptors.response.use((response) => {
-  console.log(response,response.data)
   return response.data
 }, (error => {
   let status = error.response.status

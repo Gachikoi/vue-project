@@ -1,27 +1,12 @@
 <template>
-  <div 
-    class="silder-container" 
-    @mouseover="stopAutoplay"
-    @mouseleave="autoplay" 
-    @touchstart="stopAutoplay"
-    @touchend="autoplay" 
-    @touchcancel="autoplay">
+  <div class="silder-container" @mouseover="stopAutoplay" @mouseleave="autoplay" @touchstart="stopAutoplay"
+    @touchend="autoplay" @touchcancel="autoplay">
     <div class="arrow">
-      <div class="left" 
-        @mousedown="leftActive" 
-        @mouseup="leftDisacitive"
-        @touchstart="leftActive" 
-        @touchend="leftDisacitive" 
-        @touchcancel="isLeftAcitive = false"
-        :class="{ active: isLeftAcitive }">
+      <div class="left" @mousedown="leftActive" @mouseup="leftDisacitive" @touchstart="leftActive"
+        @touchend="leftDisacitive" @touchcancel="isLeftAcitive = false" :class="{ active: isLeftAcitive }">
       </div>
-      <div class="right" 
-        @mousedown="rightActive" 
-        @mouseup="rightDisacitive" 
-        @touchstart="rightActive"
-        @touchend="rightDisacitive" 
-        @touchcancel="isRightAcitive = false" 
-        :class="{ active: isRightAcitive }">
+      <div class="right" @mousedown="rightActive" @mouseup="rightDisacitive" @touchstart="rightActive"
+        @touchend="rightDisacitive" @touchcancel="isRightAcitive = false" :class="{ active: isRightAcitive }">
       </div>
     </div>
     <ul class="images">
@@ -35,10 +20,9 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="Carousel">
 import { ref } from 'vue'
 import { onMounted } from 'vue';
-import { throttle } from '@/composables/useExtensions';
 
 const images = ref([
   {
@@ -75,7 +59,7 @@ let domImages: HTMLElement
 let timerAutoplay: number | null
 //由于我们要在按下左箭头时，右箭头也一起节流，所以我们无法使用封装好的throttle函数。
 //如果需要使用，请先将throttle()赋值给一个常量，在@事件被触发时调用这个常量，否则节流/防抖将不生效。
-let timerActive:number | null
+let timerActive: number | null
 let timerDisactive: number | null
 
 onMounted(() => {
@@ -142,8 +126,8 @@ function rightDisacitive() {
       }, 1000);//定时器时间设置为1000毫秒，与过渡时间相等（需要节流。因为如果两次点击在1000内，则会在被定时器内的回调函数的动画强制拽回index=0时的视图）
     }
     timerDisactive = setTimeout(() => {
-      timerDisactive=null
-    },1000)
+      timerDisactive = null
+    }, 1000)
   }
 }
 
@@ -182,8 +166,6 @@ function stopAutoplay() {
   width: 1200px;
   height: 350px;
   border-radius: 20px;
-  background: gainsboro;
-  box-shadow: 0px 0px 2px 2px rgba($color: #b2b2b247, $alpha: 0.3);
 
   .arrow {
     .left {
@@ -243,7 +225,8 @@ function stopAutoplay() {
       height: 350px;
 
       img {
-        height: 100%;
+        height: 98%;
+        box-shadow: 0px 0px 2px 2px rgba($color: #b2b2b247, $alpha: 0.3);
       }
     }
   }
