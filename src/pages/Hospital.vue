@@ -44,7 +44,6 @@
 <script lang="ts" setup>
 import { Document, Menu as IconMenu, Setting, InfoFilled, Search, HomeFilled } from "@element-plus/icons-vue"
 import { useRouter,useRoute } from "vue-router";
-import { ref } from "vue";
 import { onMounted } from "vue";
 import { useHospitalDetailStore} from "@/store/hospitalDetailStore";
 
@@ -61,11 +60,17 @@ const route = useRoute()
 //组件挂载完毕：通知pinia仓库发送请求获取医院详情的数据，存储在仓库中
 onMounted(() => {
   hospitalDetailStore.getHospitalDetail(route.query.hoscode as string)
+  hospitalDetailStore.getHospitalDepartment(route.query.hoscode as string)
 })
 
 //改变当前active的菜单项
 function changeActive(path: string) {
-  router.push({ path: path })
+  //当我们点击HospitalCard或点击Search的推荐信息，第一次进入/hospital/registration时，会带有query参数。
+  //但是当我们在/hospital的子路由中跳转时，如果下面这行代码不设置query参数，跳转后hoscode参数就会丢失。
+  //这时，如果我们刷新页面，Hospital组件重新挂载，route.query.hoscode不存在，上文onMounted中的getHospitalDetail便无法获取医院详情将其存储到pinia中。
+  //同时由于pinia并没有进行数据持久化，页面一刷新，pinia中的数据就会丢失，所以刷新后页面便无法显示数据了。
+  //因此下面这行代码一定要带上query参数。
+  router.push({ path: path,query:{hoscode:route.query.hoscode} })
 }
 </script>
 

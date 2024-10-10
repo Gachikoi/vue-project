@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
-import { reqHospitalDetail } from "@/api/hospital";
-import { type HospitalDetailResponseData, type HospitalDetail } from "@/api/hospital";
+import { reqHospitalDepartment, reqHospitalDetail } from "@/api/hospital";
+import { type HospitalDetailResponseData, type HospitalDetail,type HospitalDepartmentResponseData,type HospitalDepartmentArr } from "@/api/hospital";
 import { ref } from "vue";
 
 export const useHospitalDetailStore = defineStore('HospitalDetail', () => {
   let hospitalInfo = ref<HospitalDetail>({} as HospitalDetail) 
+  let hospitalDepartment=ref<HospitalDepartmentArr>([{}] as HospitalDepartmentArr)
 
   async function getHospitalDetail(hoscode: string) {
     const result: HospitalDetailResponseData = await reqHospitalDetail(hoscode)
@@ -12,7 +13,15 @@ export const useHospitalDetailStore = defineStore('HospitalDetail', () => {
       hospitalInfo.value = result.data
     }
   }
-  return { hospitalInfo, getHospitalDetail }
+
+  async function getHospitalDepartment(hoscode: string) {
+    const result: HospitalDepartmentResponseData = await reqHospitalDepartment(hoscode)
+    if (result.code == 200) {
+      hospitalDepartment.value = result.data
+    }
+  }
+
+  return { hospitalInfo, getHospitalDetail,getHospitalDepartment }
 })
 
 

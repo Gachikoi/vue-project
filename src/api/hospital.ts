@@ -1,10 +1,13 @@
 import request from "@/utils/request";
+import { extend } from "dayjs";
 
 enum API {
-  HOSPITAL_DETAIL_URL = '/hosp/hospital/'
+  HOSPITAL_DETAIL_URL = '/hosp/hospital/',
+  HOSPITAL_DEPARTMENT_URL = ' /hosp/hospital/department/'
 }
 
-export const reqHospitalDetail = (hoscode: string) =>  request.get<any,HospitalDetailResponseData>(API.HOSPITAL_DETAIL_URL + hoscode) 
+export const reqHospitalDetail = (hoscode: string) => request.get<any, HospitalDetailResponseData>(API.HOSPITAL_DETAIL_URL + hoscode)
+export const reqHospitalDepartment=(hoscode:string)=>request.get<any,HospitalDepartmentResponseData>(API.HOSPITAL_DEPARTMENT_URL+hoscode)
 
 export interface ResponseData {
   code: number
@@ -19,7 +22,7 @@ export interface HospitalDetail {
     "stopTime": string,
     "quitDay": number,
     "quitTime": string,
-    "rule":string[]
+    "rule": string[]
   },
   "hospital": {
     "id": string,
@@ -45,5 +48,18 @@ export interface HospitalDetail {
 }
 
 export interface HospitalDetailResponseData extends ResponseData {
-  data:HospitalDetail
+  data: HospitalDetail
+}
+
+
+export interface HospitalDepartment{
+  "depcode": string,
+  "depname": string,
+  "children"?:HospitalDepartment[]
+}
+
+export type HospitalDepartmentArr = HospitalDepartment[]
+
+export interface HospitalDepartmentResponseData extends ResponseData {
+  data:HospitalDepartmentArr
 }
