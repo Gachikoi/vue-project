@@ -1,21 +1,19 @@
 <template>
-  <div class="container">
+  <div class="app">
     <HospitalTop></HospitalTop>
     <div class="content">
       <RouterView to="/home"></RouterView>
     </div>
-    <HospitalBottom></HospitalBottom>
+    <HospitalBottom ref="bottom"></HospitalBottom>
   </div>
 </template>
 
 <script lang="ts" setup name="App">
-import { useRoute } from 'vue-router';
-
-const router = useRoute()
 </script>
 
 <style lang="scss" scoped>
-.container {
+.app {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,8 +21,13 @@ const router = useRoute()
   .content {
     display: flex;
     width: 1200px;
-    height: 2000px;
     margin-top: 70px;
+    margin-bottom: 100px;
+  }
+
+  .bottom{
+    position: fixed;
+    bottom: 0;
   }
 }
 </style>

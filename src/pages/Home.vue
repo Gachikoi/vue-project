@@ -17,7 +17,7 @@
     :background="false" layout="prev, pager, next, jumper,->,total,sizes" :total="total"
     @current-change="paginationChange" @size-change="paginationChange" />
   </el-col>
-  <el-col :span="4">456</el-col>
+  <el-col :span="4"><Tips></Tips></el-col>
   </el-row>
   </div>
 </template>
@@ -30,7 +30,7 @@ import HospitalCard from '@/components/HospitalCard.vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import { reqHospital, type HospitalArr, type HospitalResponseData } from '@/api/home';
-
+import Tips from '@/components/Tips.vue';
 //分页器页码
 const pageNo = ref<number>(1)
 //分页可存储卡片的数量
@@ -56,6 +56,7 @@ const getHospitalInfo = async () => {
 
 const paginationChange = async () => {
   getHospitalInfo()
+  // emits('pagination-change',document.querySelector('.home-container')!.getBoundingClientRect)
 }
 
 //子组件自定义事件：获取子组件产地过来的等级参数
@@ -63,12 +64,13 @@ const getLevel = (level: string) => {
   hostype.value = level
   getHospitalInfo()
 }
+
+// const emits=defineEmits(['pagination-change'])
 </script>
 
 <style lang="scss" scoped>
 .home-container {
   width: 1200px;
-  height: 1200px;
   margin-top: 20px;
 
   .carousel {

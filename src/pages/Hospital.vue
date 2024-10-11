@@ -2,7 +2,8 @@
   <div class="hospital">
     <div class="menu">
       <div class="top"><el-icon><home-filled /></el-icon><span>/医院信息</span></div>
-      <el-menu :default-active="route.path" class="el-menu-vertical-demo" @open="" @close=""  @select="changeActive($event)">
+      <el-menu :default-active="route.path" class="el-menu-vertical-demo" @open="" @close=""
+        @select="changeActive($event)">
         <el-menu-item index="/hospital/registration">
           <el-icon>
             <document />
@@ -43,11 +44,11 @@
 
 <script lang="ts" setup>
 import { Document, Menu as IconMenu, Setting, InfoFilled, Search, HomeFilled } from "@element-plus/icons-vue"
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { onMounted } from "vue";
-import { useHospitalDetailStore} from "@/store/hospitalDetailStore";
+import { useHospitalStore } from "@/store/hospitalDetailStore";
 
-const hospitalDetailStore = useHospitalDetailStore()
+const hospitalDetailStore = useHospitalStore()
 
 
 const router = useRouter()
@@ -70,7 +71,7 @@ function changeActive(path: string) {
   //这时，如果我们刷新页面，Hospital组件重新挂载，route.query.hoscode不存在，上文onMounted中的getHospitalDetail便无法获取医院详情将其存储到pinia中。
   //同时由于pinia并没有进行数据持久化，页面一刷新，pinia中的数据就会丢失，所以刷新后页面便无法显示数据了。
   //因此下面这行代码一定要带上query参数。
-  router.push({ path: path,query:{hoscode:route.query.hoscode} })
+  router.push({ path: path, query: { hoscode: route.query.hoscode } })
 }
 </script>
 
@@ -80,7 +81,7 @@ function changeActive(path: string) {
   width: 100%;
   margin-top: 20px;
 
-    
+
   .menu {
     flex: 2;
     display: flex;
