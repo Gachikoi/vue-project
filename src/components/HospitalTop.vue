@@ -7,19 +7,23 @@
       </div>
       <div class="right">
         <p class="help">帮助中心</p>
-        <p class="login">登录/注册</p>
+        <p class="login" @click="showLogin">登录/注册</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
+import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'vue-router';
-
+const useStore=useUserStore()
 const router = useRouter()
 function goHome() {
   router.push({ path: '/home' })
+}
+
+function showLogin() {
+  useStore.loginVisable=true
 }
 </script>
 

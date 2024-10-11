@@ -30,7 +30,7 @@
         <li v-for="department in hospitalDetailStore.hospitalDepartment" :key="department.depcode">
           <h1 class="current">{{ department.depname }}</h1>
           <ul>
-            <li v-for="item in department.children" :key="item.depcode">{{ item.depname }}</li>
+            <li @click="showLogin" v-for="item in department.children" :key="item.depcode">{{ item.depname }}</li>
           </ul>
         </li>
       </ul>
@@ -41,6 +41,8 @@
 <script lang="ts" setup>
 import { useHospitalStore } from '@/store/hospitalDetailStore';
 import { ref } from 'vue';
+import { useUserStore } from '@/store/userStore';
+const userStore=useUserStore()
 const hospitalDetailStore = useHospitalStore()
 const currentIndex = ref<number>(0)
 
@@ -49,6 +51,10 @@ function changeIndex(index:number) {
   document.querySelectorAll('.current')[currentIndex.value].scrollIntoView({
     behavior:'smooth'
   })
+}
+
+function showLogin() {
+  userStore.loginVisable=true
 }
 </script>
 
