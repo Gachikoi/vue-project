@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { reqCode } from "@/api/login";
 
 export const useUserStore = defineStore('user', () => {
-  const loginVisable = ref<boolean>(true)
+  const loginVisable = ref<boolean>(false)
   const code=ref<string>('')
   
   async function getCode(phoneNumber: string) {

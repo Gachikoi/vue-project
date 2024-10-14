@@ -24,6 +24,7 @@ import Login from './components/Login.vue';
   .content {
     display: flex;
     width: 1200px;
+    height: 2000px;
     margin-top: 70px;
     margin-bottom: 100px;
   }
